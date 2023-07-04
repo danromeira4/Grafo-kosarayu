@@ -1,0 +1,396 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+
+
+#include "grafo.h"
+#define TAMANHO 100
+
+int TAMANHOENTRADA = 1000;
+
+//char **nomes;
+int NumVertices;
+int maxVertices;
+int z = 0;
+
+int tamString(char* s1){
+  printf("LALALALA  %s",s1);
+  int i;
+  for (i = 0; s1[i] != '\0'; i++){}
+  return i;
+}
+
+void esvaziaString(char * s){
+  for (int i = 0; i <= tamString(s); i++)
+    s[i] = '\0';
+}
+
+int comparaString(char* s1, char* s2){
+  int a = 0;
+  if (tamString(s1) == tamString(s2)){
+  printf("TESTE:  %s\n",s1);
+    for (int i=0; i<tamString(s1); i++){
+      if (s1[i] == s2[i])  {a++;}
+    }
+    if (a = tamString(s1)) {return 1;}
+    else {return 0;}
+  }
+  else 
+    return 0;
+}
+
+int verificaPalavra(char * s, char ** nomes){
+  printf("CHAR:  %s\n",s);
+  printf("nomes:  '%s'\n",nomes[z]);
+
+    for (int i = 0; i <= z && z > 0; i++){
+    printf("I= %d\n",i);
+    //PROBLEMA NO STRCMP APARENTEMENTE !!!
+    if (comparaString(s, nomes[i]) == 1) 
+      return i;
+  }
+  z++;
+  nomes[z] = (char*) malloc (sizeof(char)*20);
+  strcpy(nomes[z], s);
+  printf("%s\n",nomes[z]);
+  return z;
+}
+
+
+int main(int argc, char **argv){
+
+
+  char *arrayEntrada = (char *)malloc(sizeof(char) * TAMANHOENTRADA);
+	FILE *arquivo;
+	arquivo = fopen(argv[1], "r");
+
+	if (arquivo == NULL){
+		return -1;
+	}
+
+	int i = -1;
+	while (!feof(arquivo))
+	{
+		if (i == -1){
+			fscanf(arquivo, "%d", &maxVertices);
+			
+		} else{
+      if (arrayEntrada[i] == '1' || arrayEntrada[i] == '1') break;
+			fscanf(arquivo, "%c", &arrayEntrada[i]);
+		}
+		i++;
+	}
+
+  
+top = -1;
+
+struct Graph *graph = criaGrafo(maxVertices);
+struct Graph *gr = criaGrafo(maxVertices);
+
+printf("maxvertices: %d\n",maxVertices);
+char** nomes = (char**) malloc (sizeof(char*)*maxVertices);
+
+  
+char vertice_temp[30]; // guarda uma palavra (vértice)
+int aux = 0;
+int aux2 = 0;
+int a;
+int b;
+
+printf ("%s\n",arrayEntrada);
+  
+while (arrayEntrada[aux] != '\0'){
+ // printf("Teste2");
+  printf("%c\n",arrayEntrada[aux]);
+while ((65<=arrayEntrada[aux] && 'Z'<=arrayEntrada[aux])             
+  ||('a'<=arrayEntrada[aux] &&'z'<=arrayEntrada[aux])
+|| arrayEntrada[aux]==':' || arrayEntrada[aux]==';'){
+  vertice_temp[aux2] = arrayEntrada[aux];
+  aux++;
+  aux2++;
+  }
+  printf("VERTICE TEMP: '%s'\n",vertice_temp);
+  if(!((65<=arrayEntrada[aux] && 'Z'<=arrayEntrada[aux])             
+  ||('a'<=arrayEntrada[aux] &&'z'<=arrayEntrada[aux])
+|| arrayEntrada[aux]==':' || arrayEntrada[aux]==';'))
+    aux++;
+  
+  if (vertice_temp[aux2-1] == ':'){
+  vertice_temp[tamString(vertice_temp) - 1] = '\0';
+  printf("TESTE 20\n");
+  a = verificaPalavra(vertice_temp, nomes);
+  }
+  if (vertice_temp[aux-1] == ';'){
+  vertice_temp[tamString(vertice_temp) - 1] = '\0';
+  b = verificaPalavra(vertice_temp, nomes);
+  addAresta(grafo, gr, a, b, 0);
+  }
+  
+  esvaziaString(vertice_temp);
+  aux2=0;
+} 
+  
+  printf("%s\n", arrayEntrada);
+
+  
+
+imprimeGrafo(graph);
+componentesFortementeConexos(graph, gr, maxVertices);
+  
+return 0;
+}
+
+
+/* LINKS:
+
+https://www.topcoder.com/thrive/articles/kosarajus-algorithm-for-strongly-connected-components
+https://medium.com/@perera.hansani95/strongly-connected-components-algorithm-in-c-9c60968bd0e0
+
+*/
+
+//maxvertices: 8
+
+a: b;
+b: c; e; f;
+c: d; g;
+d: c; h;
+e: a; f;
+f: g;
+g: f; h;
+h: h;
+1►☻►☻
+
+
+VERTICE TEMP: '@'
+a
+VERTICE TEMP: 'a:'
+TESTE 20
+a
+b
+VERTICE TEMP: 'b;'
+b
+VERTICE TEMP: 'b:'
+TESTE 20
+I= 0
+s:  b
+nomes[0]:  └+Ç
+I= 1
+s:  b
+nomes[1]:  a
+TESTE:  b
+b
+c
+VERTICE TEMP: 'c;'
+e
+VERTICE TEMP: 'e;'
+f
+VERTICE TEMP: 'f;'
+c
+VERTICE TEMP: 'c:'
+TESTE 20
+I= 0
+s:  c
+nomes[0]:  └+Ç
+I= 1
+s:  c
+nomes[1]:  a
+TESTE:  c
+I= 2
+s:  c
+nomes[2]:  b
+TESTE:  c
+c
+d
+VERTICE TEMP: 'd;'
+g
+VERTICE TEMP: 'g;'
+d
+VERTICE TEMP: 'd:'
+TESTE 20
+I= 0
+s:  d
+nomes[0]:  └+Ç
+I= 1
+s:  d
+nomes[1]:  a
+TESTE:  d
+I= 2
+s:  d
+nomes[2]:  b
+TESTE:  d
+I= 3
+s:  d
+nomes[3]:  c
+TESTE:  d
+d
+c
+VERTICE TEMP: 'c;'
+h
+VERTICE TEMP: 'h;'
+e
+VERTICE TEMP: 'e:'
+TESTE 20
+I= 0
+s:  e
+nomes[0]:  └+Ç
+I= 1
+s:  e
+nomes[1]:  a
+TESTE:  e
+I= 2
+s:  e
+nomes[2]:  b
+TESTE:  e
+I= 3
+s:  e
+nomes[3]:  c
+TESTE:  e
+I= 4
+s:  e
+nomes[4]:  d
+TESTE:  e
+e
+a
+VERTICE TEMP: 'a;'
+f
+VERTICE TEMP: 'f;'
+f
+VERTICE TEMP: 'f:'
+TESTE 20
+I= 0
+s:  f
+nomes[0]:  └+Ç
+I= 1
+s:  f
+nomes[1]:  a
+TESTE:  f
+I= 2
+s:  f
+nomes[2]:  b
+TESTE:  f
+I= 3
+s:  f
+nomes[3]:  c
+TESTE:  f
+I= 4
+s:  f
+nomes[4]:  d
+TESTE:  f
+I= 5
+s:  f
+nomes[5]:  e
+TESTE:  f
+f
+g
+VERTICE TEMP: 'g;'
+g
+VERTICE TEMP: 'g:'
+TESTE 20
+I= 0
+s:  g
+nomes[0]:  └+Ç
+I= 1
+s:  g
+nomes[1]:  a
+TESTE:  g
+I= 2
+s:  g
+nomes[2]:  b
+TESTE:  g
+I= 3
+s:  g
+nomes[3]:  c
+TESTE:  g
+I= 4
+s:  g
+nomes[4]:  d
+TESTE:  g
+I= 5
+s:  g
+nomes[5]:  e
+TESTE:  g
+I= 6
+s:  g
+nomes[6]:  f
+TESTE:  g
+g
+f
+VERTICE TEMP: 'f;'
+h
+VERTICE TEMP: 'h;'
+h
+VERTICE TEMP: 'h:'
+TESTE 20
+I= 0
+s:  h
+nomes[0]:  └+Ç
+I= 1
+s:  h
+nomes[1]:  a
+TESTE:  h
+I= 2
+s:  h
+nomes[2]:  b
+TESTE:  h
+I= 3
+s:  h
+nomes[3]:  c
+TESTE:  h
+I= 4
+s:  h
+nomes[4]:  d
+TESTE:  h
+I= 5
+s:  h
+nomes[5]:  e
+TESTE:  h
+I= 6
+s:  h
+nomes[6]:  f
+TESTE:  h
+I= 7
+s:  h
+nomes[7]:  g
+TESTE:  h
+h
+h
+VERTICE TEMP: 'h;'
+1
+VERTICE TEMP: ''
+►
+VERTICE TEMP: ''
+☻
+VERTICE TEMP: ''
+►
+VERTICE TEMP: ''
+☻
+VERTICE TEMP: ''
+
+a: b;
+b: c; e; f;
+c: d; g;
+d: c; h;
+e: a; f;
+f: g;
+g: f; h;
+h: h;
+1►☻►☻
+------------------ Imprimindo grafo ----------------
+Vertices: 8
+V0:
+V1:
+V2:
+V3:
+V4:
+V5:
+V6:
+V7:
+
+Componente [1]:  4
+Componente [2]:  3
+Componente [3]:  2
+Componente [4]:  1
+Componente [5]:  0
+Nao, o grafo nao ├®  fortemente conexo.
+Numero de componentes: 5

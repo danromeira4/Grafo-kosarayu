@@ -1,0 +1,10 @@
+8
+SaoPaulo: NovaIorque;
+NovaIorque: Paris;
+Paris: Dubai;
+Dubai: SaoPaulo; Tokyo; HongKong; Sydney;
+HongKong: Tokyo;
+Tokyo: Paris;
+Sydney: Luanda;
+Luanda: SaoPaulo;
+1
